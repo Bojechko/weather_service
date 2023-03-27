@@ -5,6 +5,7 @@ weather_service for lab 1 avito
 https://github.com/Bojechko/GRPCServer - auth service for weather_service with auth branch
 
 without auth
+
 http://localhost:8080/v1/current/moscow
 
 http://localhost:8080/v1/forecast/moscow/2023-03-29
