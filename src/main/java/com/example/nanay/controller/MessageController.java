@@ -1,5 +1,6 @@
 package com.example.nanay.controller;
 
+import com.example.nanay.gRPCClient.GRPCClient;
 import com.example.nanay.weather.WeatherAPI;
 import org.json.JSONObject;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,8 +17,12 @@ import static java.lang.String.valueOf;
 @RestController
 @RequestMapping("v1")
 public class MessageController {
-    @GetMapping("current/{city}")
-    public String currentWeather(@PathVariable String city) throws IOException {
+    @GetMapping("current/{login}/{city}")
+    public String currentWeather(@PathVariable String login, @PathVariable String city) throws IOException, InterruptedException {
+        if(!GRPCClient.makeRequest(login)) {
+            return "Неверный логин";
+        }
+
         double celsius = WeatherAPI.collectTemp(city) - 273.15;
 
         JSONObject json = new JSONObject();
