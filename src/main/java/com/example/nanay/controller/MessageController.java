@@ -5,10 +5,7 @@ import com.example.nanay.weather.WeatherAPI;
 import org.json.JSONObject;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -19,8 +16,9 @@ import static java.lang.String.valueOf;
 @RestController
 @RequestMapping("v1")
 public class MessageController {
-    @GetMapping("current/{login}/{city}")
-    public String currentWeather(@PathVariable String login, @PathVariable String city) throws IOException, InterruptedException {
+    @GetMapping("current/{city}")
+    public String currentWeather(@RequestHeader("Own-Auth-UserName") String login, @PathVariable String city) throws IOException, InterruptedException {
+        System.out.println(login);
         if(!GRPCClient.makeRequest(login)) {
             return String.valueOf(HttpStatus.FORBIDDEN);
         }
@@ -39,8 +37,8 @@ public class MessageController {
         return json.toString();
     }
 
-    @GetMapping("forecast/{login}/{city}/{date}")
-    public String timestampWeather(@PathVariable String login, @PathVariable String city, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws IOException, InterruptedException {
+    @GetMapping("forecast/{city}/{date}")
+    public String timestampWeather(@RequestHeader("Own-Auth-UserName") String login, @PathVariable String city, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws IOException, InterruptedException {
 
         if(!GRPCClient.makeRequest(login)) {
             return String.valueOf(HttpStatus.FORBIDDEN);
