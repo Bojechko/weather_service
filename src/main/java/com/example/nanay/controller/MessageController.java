@@ -26,6 +26,8 @@ public class MessageController {
         json.put("unit", "celsius");
         json.put("temperature", valueOf((int)celsius));
 
+        System.out.println("for log in compose");
+
         if (celsius == -563.15){
             return "Неверный город";
         }
