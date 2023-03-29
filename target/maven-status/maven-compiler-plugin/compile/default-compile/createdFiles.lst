@@ -1,0 +1,4 @@
+com\example\nanay\weather\WeatherAPI.class
+com\example\nanay\NanayApplication.class
+com\example\nanay\utils\Utils.class
+com\example\nanay\controller\MessageController.class
