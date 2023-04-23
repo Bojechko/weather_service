@@ -3,10 +3,8 @@ package com.example.nanay.controller;
 import com.example.nanay.weather.WeatherAPI;
 import org.json.JSONObject;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.Date;
@@ -16,6 +14,22 @@ import static java.lang.String.valueOf;
 @RestController
 @RequestMapping("v1")
 public class MessageController {
+
+    @PutMapping("/redis/{city}")
+    public void putToRedis(@PathVariable String city) throws IOException {
+        Jedis jedis = new Jedis("localhost", 6379);
+        jedis.set(city, String.valueOf(WeatherAPI.collectTemp(city) - 273.15));
+        jedis.close();
+    }
+
+    @GetMapping("/redis/{city}")
+    public String getFromRedis(@PathVariable String city) {
+        Jedis jedis = new Jedis("localhost", 6379);
+        String cachedResponse = jedis.get(city);
+        jedis.close();
+        return cachedResponse;
+    }
+
     @GetMapping("current/{city}")
     public String currentWeather(@PathVariable String city) throws IOException {
         double celsius = WeatherAPI.collectTemp(city) - 273.15;
